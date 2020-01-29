@@ -6,6 +6,12 @@ You can put you C++ lib sources (git) into `requirements_cpp_git.txt`.
 
 The file `requirements_cpp_git.txt` is pre-filled with an example.
 
+(The script is just a quick solution for my ubuntu machine - some adaptations may be needed for other systems).
+
+## Requirements
+
+ * python3, virtualenv, cmake, g++
+
 ## Usage
 
  * ./activate_env
