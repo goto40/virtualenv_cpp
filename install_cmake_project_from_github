@@ -1,0 +1,12 @@
+url=$1
+name=$(basename $1)
+inst=venv/tmp/$name
+echo "cloning and installing $url into $inst"
+
+{
+mkdir -p $inst
+git clone $url $inst || exit 1
+cd $inst
+cmake . && make install || exit 1
+cd -
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+inst_cpp="$(pwd)/install_cmake_project_from_github"
+install_libs=false
+
+if [ ! -d venv ] ;
+then
+    virtualenv venv -p python3 || exit 1    
+    source venv/bin/activate || exit 1
+    install_libs=true
+else
+    source venv/bin/activate || exit 1
+fi
+
+export CMAKE_INCLUDE_PATH=${VIRTUAL_ENV}/include
+export CMAKE_LIBRARY_PATH=${VIRTUAL_ENV}/lib
+export CPATH=$CPATH:${VIRTUAL_ENV}/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${VIRTUAL_ENV}/lib
+export LIBRARY_PATH=$LIBRARY_PATH:${VIRTUAL_ENV}/lib
+
+shopt -s expand_aliases
+echo "alias cmake=\"cmake -DCMAKE_INSTALL_PREFIX:PATH=${VIRTUAL_ENV}\"" > ${VIRTUAL_ENV}/bin/custom_settings.sh
+source ${VIRTUAL_ENV}/bin/custom_settings.sh
+
+# install libs
+if [ "$install_libs" = true ] ; then
+    pip install -r requirements.txt || exit 1 
+    for n in $(cat requirements_cpp_git.txt); do
+        source $inst_cpp $n
+    done
+fi
+
+# install local stuff
+# (none)
+
+echo "ok. environment activated. exit shell to exit environment..."
+bash --rcfile <(cat $HOME/.bashrc; echo 'source ${VIRTUAL_ENV}/bin/activate && source ${VIRTUAL_ENV}/bin/custom_settings.sh')
